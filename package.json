@@ -1,0 +1,24 @@
+{
+  "name": "nodeaddon",
+  "version": "1.0.0",
+  "description": "Hello World Node Addon",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/hammus/nodeaddon.git"
+  },
+  "keywords": [
+    "spike",
+    "test",
+    "no-release"
+  ],
+  "author": "Liam Whan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hammus/nodeaddon/issues"
+  },
+  "homepage": "https://github.com/hammus/nodeaddon#readme"
+}
