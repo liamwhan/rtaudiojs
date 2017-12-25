@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"terminal.integrated.shell.windows": "C:\\Windows\\System32\\cmd.exe",
+		"terminal.integrated.cwd": "${workspaceRoot}"
+	}
+}
