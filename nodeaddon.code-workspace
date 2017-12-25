@@ -5,7 +5,10 @@
 		}
 	],
 	"settings": {
-		"terminal.integrated.shell.windows": "C:\\Windows\\System32\\cmd.exe",
-		"terminal.integrated.cwd": "${workspaceRoot}"
+		"terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\cmd.exe",
+		"terminal.integrated.shellArgs.windows": [
+			"/k",
+			"d:\\shell\\shell.bat"
+		],
 	}
 }
