@@ -10,5 +10,8 @@
 			"/k",
 			"d:\\shell\\shell.bat"
 		],
+		"files.associations": {
+			"xtr1common": "cpp"
+		},
 	}
 }
