@@ -6,14 +6,19 @@ Exposes a real-time audio API to NodeJS, granting low-level IO access to system 
 
 This library contains NodeJS bindings for the C++ real-time audio library [RtAudio](https://github.com/thestk/rtaudio) by Gary P. Scavone (McGill University). You can find the the [Documentation for RtAudio here](https://music.mcgill.ca/~gary/rtaudio).
 
+**NOTE:** Currently only tested in the following environment: 
+- Win 10 x64
+- NodeJS v8.9.3 
+- RtAudio compiled in MS DirectSound mode: `__WINDOWS_DS__` (read more [here](http://www.music.mcgill.ca/~gary/rtaudio/compiling.html))
+- RtAudio compiled in Windows Audio Session API (WASAPI) mode: `__WINDOWS_WASAPI__` (read more [here](http://www.music.mcgill.ca/~gary/rtaudio/compiling.html))
+
 ## Dependencies
-**NOTE:** Currently only tested in the following environment: Win 10 x64, NodeJS v8.9.3, with the `__WINDOWS_DS__` (DirectSound) or `__WINDOWS_WASAPI__` (Windows Audio Session API) preprocessor directives defined for RtAudio (read more [here](http://www.music.mcgill.ca/~gary/rtaudio/compiling.html)).
 - MSVC Build Tools (Install Visual Studio with C++ Development enabled.)
 - NodeJS v8.9.3 (may work on earlier versions but is untested)
 - Python 2.x (required by `node-gyp`. I used v2.7.14)
 - `node-gyp`: `npm i -g node-gyp`
 
-### Notes
+### Additional Info 
 - Due to licensing issues with Steinberg's ASIO driver, the RtAudio library must be cloned separate to this repo. 
 - I have created an unmodified fork of the original RtAudio repo to prevent any breaking changes committed to the RtAudio repo from mangling this project. This will probably change in the future when I get CI setup.
 
@@ -81,15 +86,15 @@ If all went well you should see output similar the following (but with the devic
 
 ```
 
-# DISCLAIMER
+## Disclaimer
 This is a very new project. It is currently being actively developed and should be considered unstable. It has only been tested on Windows 10 x64, using Node v8.9.3 with RtAudio compiled in DirectSound mode (`__WINDOWS_DS__`) 
 
 It will not be published to the `npm` registry until v1.0 which should be considered the first stable version.
 
-# License
+## RtAudio License
 [RtAudio](https://music.mcgill.ca/~gary/rtaudio) is licensed under a variant of the MIT License, please see [here](http://www.music.mcgill.ca/~gary/rtaudio/license.html) for more information.
 
-## Licensed under MIT
+## RtAudioJS License (MIT)
 Copyright (c) 2017-2018 Liam Whan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
