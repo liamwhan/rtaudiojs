@@ -1,4 +1,4 @@
 
 const rtaudio = require('../build/Release/RtAudioWASAPI');
 
-console.log(rtaudio.deviceProbe());
+require('fs').writeFileSync('./test/fixtures/wasapi.json', JSON.stringify(rtaudio.deviceProbe()));

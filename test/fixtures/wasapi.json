@@ -1,0 +1,80 @@
+[
+    {
+        "probed": true,
+        "name": "MX27AQ-8 (NVIDIA High Definition Audio)",
+        "outputChannels": 2,
+        "inputChannels": 0,
+        "duplexChannels": 0,
+        "isDefaultOutput": false,
+        "isDefaultInput": false,
+        "sampleRates": [
+            48000
+        ],
+        "preferredSampleRate": 48000
+    },
+    {
+        "probed": true,
+        "name": "Headphones (Rift Audio)",
+        "outputChannels": 2,
+        "inputChannels": 0,
+        "duplexChannels": 0,
+        "isDefaultOutput": false,
+        "isDefaultInput": false,
+        "sampleRates": [
+            48000
+        ],
+        "preferredSampleRate": 48000
+    },
+    {
+        "probed": true,
+        "name": "Realtek Digital Output (Realtek High Definition Audio)",
+        "outputChannels": 2,
+        "inputChannels": 0,
+        "duplexChannels": 0,
+        "isDefaultOutput": false,
+        "isDefaultInput": false,
+        "sampleRates": [
+            48000
+        ],
+        "preferredSampleRate": 48000
+    },
+    {
+        "probed": true,
+        "name": "Line (2- Steinberg UR44)",
+        "outputChannels": 2,
+        "inputChannels": 0,
+        "duplexChannels": 0,
+        "isDefaultOutput": true,
+        "isDefaultInput": false,
+        "sampleRates": [
+            44100
+        ],
+        "preferredSampleRate": 44100
+    },
+    {
+        "probed": true,
+        "name": "Line (2- Steinberg UR44)",
+        "outputChannels": 0,
+        "inputChannels": 2,
+        "duplexChannels": 0,
+        "isDefaultOutput": false,
+        "isDefaultInput": true,
+        "sampleRates": [
+            44100
+        ],
+        "preferredSampleRate": 44100
+    },
+    {
+        "probed": true,
+        "name": "Microphone (Rift Audio)",
+        "outputChannels": 0,
+        "inputChannels": 1,
+        "duplexChannels": 0,
+        "isDefaultOutput": false,
+        "isDefaultInput": false,
+        "sampleRates": [
+            48000
+        ],
+        "preferredSampleRate": 48000
+    }
+]

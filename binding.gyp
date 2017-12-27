@@ -1,9 +1,9 @@
 {
     "targets": [
         {
-            "target_name": "RtAudioDSound",
+            "target_name": "RtAudio",
             "sources": [
-                "RtAudioJS.cpp",
+                "RtAudioJS.cc",
                 "lib/rtaudio/RtAudio.cpp"
                 ],
             "include_dirs": [
@@ -17,28 +17,37 @@
                     'link_settings': {
                         'libraries': ['-lole32', '-lwinmm' , '-ldsound']
                     }
-                }]
-            ]
-        },
-        {
-            "target_name": "RtAudioWASAPI",
-            "sources": [
-                "RtAudioJS.cpp",
-                "lib/rtaudio/RtAudio.cpp"
-                ],
-            "include_dirs": [
-                "lib/rtaudio",
-                "lib/rtaudio/include"
-            ],
-            'conditions': [
-                ['OS=="win"', 
+                }],
+                ['OS=="linux"',
                 {
-                    'defines': [ '__WINDOWS_WASAPI__'],
+                    'cflags!': [ '-fno-exceptions' ],
+                    'cflags_cc!': [ '-fno-exceptions' ],
+                    'defines': [ '__LINUX_ALSA__'],
                     'link_settings': {
-                        'libraries': ['-lole32', '-lwinmm' , '-lksuser', '-luuid']
+                        'libraries': ['-lasound', '-lpthread']
                     }
                 }]
             ]
         }
+        # ,{
+        #     "target_name": "RtAudioWASAPI",
+        #     "sources": [
+        #         "RtAudioJS.cpp",
+        #         "lib/rtaudio/RtAudio.cpp"
+        #         ],
+        #     "include_dirs": [
+        #         "lib/rtaudio",
+        #         "lib/rtaudio/include"
+        #     ],
+        #     'conditions': [
+        #         ['OS=="win"', 
+        #         {
+        #             'defines': [ '__WINDOWS_WASAPI__'],
+        #             'link_settings': {
+        #                 'libraries': ['-lole32', '-lwinmm' , '-lksuser', '-luuid']
+        #             }
+        #         }]
+        #     ]
+        # }
         ]
 }
