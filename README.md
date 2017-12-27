@@ -1,23 +1,99 @@
-# Test Node Addon
+# RtAudioJS
+
+**IMPORTANT:** Please read the [DISCLAIMER](#disclaimer) below
+## Description
+Exposes a real-time audio API to NodeJS, granting low-level IO access to system audio devices.
+
+This library contains NodeJS bindings for the C++ real-time audio library [RtAudio](https://github.com/thestk/rtaudio) by Gary P. Scavone (McGill University). You can find the the [Documentation for RtAudio here](https://music.mcgill.ca/~gary/rtaudio).
 
 ## Dependencies
-- NodeJS runtime (we used v8.9.3)
-- `node-gyp` (Node Native Build Tool): `npm i -g node-gyp`)
-- Python (required by `node-gyp`. We used v2.7.14)
+**NOTE:** Currently only tested in the following environment: Win 10 x64, NodeJS v8.9.3, with the `__WINDOWS_DS__` (DirectSound) or `__WINDOWS_WASAPI__` (Windows Audio Session API) preprocessor directives defined for RtAudio (read more [here](http://www.music.mcgill.ca/~gary/rtaudio/compiling.html)).
+- MSVC Build Tools (Install Visual Studio with C++ Development enabled.)
+- NodeJS v8.9.3 (may work on earlier versions but is untested)
+- Python 2.x (required by `node-gyp`. I used v2.7.14)
+- `node-gyp`: `npm i -g node-gyp`
 
+### Notes
+- Due to licensing issues with Steinberg's ASIO driver, the RtAudio library must be cloned separate to this repo. 
+- I have created an unmodified fork of the original RtAudio repo to prevent any breaking changes committed to the RtAudio repo from mangling this project. This will probably change in the future when I get CI setup.
 
-## Build
-1. Create [`hello.cpp`](hello.cpp)
-2. Create JSON build file [`binding.gyp`](binding.gyp)
-3. Configure `node-gyp`: `node-gyp configure`
-4. Build: `node-gyp build`
+## Building and running on Windows
+1. Install [dependencies](#dependencies)
+2. Clone this repo: `$ git clone https://github.com/hammus/rtaudiojs.git && cd rtaudiojs` 
+3. Clone my fork of [RtAudio](https://github.com/hammus/rtaudio) to `lib/rtaudio`
+    - `$ md lib && git clone https://github.com/hammus/rtaudio.git ./lib/rtaudio`
+4. Configure the build (from project root e.g. `/path/to/rtaudiojs
+    - `$ node-gyp configure`
+5. Build the project 
+    - `$ node-gyp build`
+6. Run the test scripts 
+    - Windows Direct Sound: `$ node test/dsound.js`
+    - Windows WASAPI: `$ node test/wasapi.js`
 
+If all went well you should see output similar the following (but with the devices on your local machine):
+```javascript
+[ { probed: true,
+    name: 'Default Device',
+    outputChannels: 2,
+    inputChannels: 2,
+    duplexChannels: 2,
+    isDefaultOutput: true,
+    isDefaultInput: true,
+    sampleRates:
+     [ 4000,
+       5512,
+       8000,
+       9600,
+       11025,
+       16000,
+       22050,
+       32000,
+       44100,
+       48000,
+       88200,
+       96000,
+       176400,
+       192000 ],
+    preferredSampleRate: 48000 },
+  { probed: true,
+    name: 'Line (2- Steinberg UR44)',
+    outputChannels: 2,
+    inputChannels: 2,
+    duplexChannels: 2,
+    isDefaultOutput: false,
+    isDefaultInput: false,
+    sampleRates:
+     [ 4000,
+       5512,
+       8000,
+       9600,
+       11025,
+       16000,
+       22050,
+       32000,
+       44100,
+       48000,
+       88200,
+       96000,
+       176400,
+       192000 ],
+    preferredSampleRate: 48000 }]
 
-## Notes and Gotchas
+```
 
-### Windows
+# DISCLAIMER
+This is a very new project. It is currently being actively developed and should be considered unstable. It has only been tested on Windows 10 x64, using Node v8.9.3 with RtAudio compiled in DirectSound mode (`__WINDOWS_DS__`) 
 
-#### Multiple MS C++ Build Toolset Versions
-`node-gyp` makes assumptions about the MS build tools versions, so if you bootstrap your Windows terminal with `vcvarsall.bat` your environment variables will be wrong and `node-gyp build` may be unable to find the v14x toolset. 
+It will not be published to the `npm` registry until v1.0 which should be considered the first stable version.
 
-Apparently, you can specify the toolset version by setting the `GYP_MSVS_VERSION` environment variable (e.g. `GYP_MSVS_VERSION=2015`) but I haven't tried this.
+# License
+[RtAudio](https://music.mcgill.ca/~gary/rtaudio) is licensed under a variant of the MIT License, please see [here](http://www.music.mcgill.ca/~gary/rtaudio/license.html) for more information.
+
+## Licensed under MIT
+Copyright (c) 2017-2018 Liam Whan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
