@@ -1,4 +1,4 @@
 
-const addon = require('./build/Release/addon');
+const rtaudio = require('./build/Release/RtAudio');
 
-console.log(addon.hello());
+console.log(rtaudio.ProbeDevices());

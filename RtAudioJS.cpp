@@ -1,56 +1,130 @@
+#include <vector>
 #include <node.h>
 #include "lib/rtaudio/RtAudio.h"
 
-namespace demo {
+namespace demo
+{
 
-    using v8::Exception;
-    using v8::FunctionCallbackInfo;
-    using v8::Isolate;
-    using v8::Local;
-    using v8::Number;
-    using v8::Object;
-    using v8::String;
-    using v8::Value;
-    using v8::Array;
+using namespace v8;
 
+void Probe(const FunctionCallbackInfo<Value> &args)
+{
+    Isolate *isolate = args.GetIsolate();
 
-    // NOTE(liam): This is the implementation of a method
-    // that will be exposed on the exported JS obect.
-    void Add(const FunctionCallbackInfo<Value>& args)
+    // RtAudio operations:
+    // Instantiate the RtAudio Library, allocate a DeviceInfo struct to store the probe results
+    // and get the number of available devices on the
+    RtAudio audio;
+    RtAudio::DeviceInfo info;
+    unsigned int devices = audio.getDeviceCount();
+
+    // The JS Array of DeviceInfo objects we will be returning on completion
+    Local<Array> jsDevices = Array::New(isolate, devices);
+    // Probe each available device
+    for (unsigned int i = 0; i < devices; i++)
     {
-        Isolate *isolate = args.GetIsolate();
-        
-        // Check the number of arguments passed
-        if(args.Length() < 2)
+        // Get the DeviceInfo for device i
+        info = audio.getDeviceInfo(i);
+        Local<Object> jsInfo = Object::New(isolate);
+
+        jsInfo->Set(
+            String::NewFromUtf8(isolate, "probed"),
+            Boolean::New(isolate, info.probed));
+
+        if (info.probed == true)
         {
-            isolate->ThrowException(Exception::TypeError(
-                String::NewFromUtf8(
-                    isolate, 
-                    "Incorrect number of arguments. Expected 2, recieved" + args.Length())));
-                return;
-        }
-        
-        // Check the argument types
-        if (!args[0]->IsNumber() || !args[1]->IsNumber()) {
-            isolate->ThrowException(Exception::TypeError(
-                String::NewFromUtf8(isolate, "Incorrect argument type, both arguments must be a Number")));
-            return;
-        }
-        
-        double value = args[0]->NumberValue() + args[1]->NumberValue();
-        Local<Number> num = Number::New(isolate, value);
+            jsInfo->Set(
+                String::NewFromUtf8(isolate, "name"),
+                String::NewFromUtf8(isolate, info.name.c_str()));
 
-        args.GetReturnValue().Set(num);
+            jsInfo->Set(
+                String::NewFromUtf8(isolate, "outputChannels"),
+                Number::New(isolate, info.outputChannels));
+
+            jsInfo->Set(
+                String::NewFromUtf8(isolate, "inputChannels"),
+                Number::New(isolate, info.inputChannels));
+
+            jsInfo->Set(
+                String::NewFromUtf8(isolate, "duplexChannels"),
+                Number::New(isolate, info.duplexChannels));
+
+            jsInfo->Set(
+                String::NewFromUtf8(isolate, "isDefaultOutput"),
+                Boolean::New(isolate, info.isDefaultOutput));
+
+            jsInfo->Set(
+                String::NewFromUtf8(isolate, "isDefaultInput"),
+                Boolean::New(isolate, info.isDefaultInput));
+
+            unsigned int nSampleRates = (unsigned int)info.sampleRates.size();
+            Local<Array> sampleRates = Array::New(isolate, nSampleRates);
+            for (unsigned int j = 0; j < nSampleRates; ++j)
+            {
+                sampleRates->Set(Number::New(isolate, j), Number::New(isolate, info.sampleRates[j]));
+            }
+            jsInfo->Set(
+                String::NewFromUtf8(isolate, "sampleRates"),
+                sampleRates);
+
+            jsInfo->Set(
+                String::NewFromUtf8(isolate, "preferredSampleRate"),
+                Number::New(isolate, info.preferredSampleRate));
+
+            // TODO(liam): RtAudioFormat nativeFormats (its a bitmask and probably contains useful information so we should include it)
+        }
+        else
+        {
+            //Probe failed
+            jsInfo->Set(
+                String::NewFromUtf8(isolate, "name"),
+                v8::Null(isolate));
+
+            jsInfo->Set(
+                String::NewFromUtf8(isolate, "outputChannels"),
+                v8::Null(isolate));
+
+            jsInfo->Set(
+                String::NewFromUtf8(isolate, "inputChannels"),
+                v8::Null(isolate));
+
+            jsInfo->Set(
+                String::NewFromUtf8(isolate, "duplexChannels"),
+                v8::Null(isolate));
+
+            jsInfo->Set(
+                String::NewFromUtf8(isolate, "isDefaultOutput"),
+                v8::Null(isolate));
+
+            jsInfo->Set(
+                String::NewFromUtf8(isolate, "isDefaultInput"),
+                v8::Null(isolate));
+
+            jsInfo->Set(
+                String::NewFromUtf8(isolate, "sampleRates"),
+                Array::New(isolate));
+
+            jsInfo->Set(
+                String::NewFromUtf8(isolate, "preferredSampleRate"),
+                v8::Null(isolate));
+        }
+
+        // Add the DeviceInfo object to the return array.
+        jsDevices->Set(i, jsInfo);
+
     }
 
-    // NOTE(liam): Setup the javascript module object and adds the above
-    // Method fn to it
-    void Init(Local<Object> exports)
-    {
-        NODE_SET_METHOD(exports, "add", Add);
-    }
+    // 
+    args.GetReturnValue().Set(jsDevices);
+}
 
-    // NOTE(liam): Registers the init function with node gyp
-    NODE_MODULE(NODE_GYP_MODULE_NAME, Init);
+// NOTE(liam): Setup the javascript module object and adds the above
+// Method fn to it
+void Init(Local<Object> exports)
+{
+    NODE_SET_METHOD(exports, "deviceProbe", Probe);
+}
 
+// NOTE(liam): Registers the init function with node gyp
+NODE_MODULE(NODE_GYP_MODULE_NAME, Init);
 }

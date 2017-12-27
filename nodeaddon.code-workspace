@@ -11,7 +11,16 @@
 			"d:\\shell\\shell.bat"
 		],
 		"files.associations": {
-			"xtr1common": "cpp"
+			"xtr1common": "cpp",
+			"xlocale": "cpp",
+			"xstring": "cpp",
+			"xutility": "cpp",
+			"deque": "cpp",
+			"initializer_list": "cpp",
+			"queue": "cpp",
+			"type_traits": "cpp",
+			"vector": "cpp",
+			"xtree": "cpp"
 		},
 	}
 }
