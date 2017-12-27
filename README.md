@@ -31,7 +31,8 @@ This library contains NodeJS bindings for the C++ real-time audio library [RtAud
 
 ## Building and running on Windows
 1. Install [dependencies](#dependencies)
-2. Clone this repo: `$ git clone https://github.com/hammus/rtaudiojs.git && cd rtaudiojs` 
+2. Clone this repo: 
+    - `$ git clone https://github.com/hammus/rtaudiojs.git && cd rtaudiojs` 
 3. Clone my fork of [RtAudio](https://github.com/hammus/rtaudio) to `lib/rtaudio`
     - `$ md lib && git clone https://github.com/hammus/rtaudio.git ./lib/rtaudio`
 4. Configure the build (from project root e.g. `/path/to/rtaudiojs
@@ -66,30 +67,7 @@ If all went well you should see output similar the following (but with the devic
        96000,
        176400,
        192000 ],
-    preferredSampleRate: 48000 },
-  { probed: true,
-    name: 'Line (2- Steinberg UR44)',
-    outputChannels: 2,
-    inputChannels: 2,
-    duplexChannels: 2,
-    isDefaultOutput: false,
-    isDefaultInput: false,
-    sampleRates:
-     [ 4000,
-       5512,
-       8000,
-       9600,
-       11025,
-       16000,
-       22050,
-       32000,
-       44100,
-       48000,
-       88200,
-       96000,
-       176400,
-       192000 ],
-    preferredSampleRate: 48000 }]
+    preferredSampleRate: 48000 } ]
 
 ```
 
