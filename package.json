@@ -4,9 +4,8 @@
   "description": "NodeJS Bindings for the RtAudio C++ library by Gary P. Scavone of McGill University",
   "main": "index.js",
   "scripts": {
-    "test": "tap test/dsound.js",
-    "build-wasapi": "buildwasapi.bat",
-    "build-ds": "buildds.bat"
+    "test": "tap test/tests.js",
+    "build": "node-gyp rebuild -j 12"
   },
   "repository": {
     "type": "git",

@@ -16,6 +16,17 @@
                     "RtAudioJS.cc",
                     "lib/rtaudio/RtAudio.cpp"
                 ],
+                'cflags!': ['-fno-exceptions'],
+                'cflags_cc!': ['-fno-exceptions'],
+                'configurations': {
+                    'Release': {
+                        'VCCLCompilerTool': {
+                            'ExceptionHandling': '1',
+                            'AdditionalOptions': ['/EHsc']
+                        }
+                    }
+                }
+
 
             }, {
                 'target_name': 'RTAJSWASAPI',  # RtAudioJs using WASAPI
@@ -26,7 +37,19 @@
                 "sources": [
                     "RtAudioJS.cc",
                     "lib/rtaudio/RtAudio.cpp"
-                ]
+                ],
+                'cflags': ['/EHsc'],
+                'cflags_cc!': ['-fno-exceptions'],
+                'configurations': {
+                    'Release': {
+                        'msvs_settings': {
+                            'VCCLCompilerTool': {
+                                'ExceptionHandling': '1',
+                                'AdditionalOptions': ['/EHsc']
+                            }
+                        }
+                    }
+                }
             }]
         }]
     ]

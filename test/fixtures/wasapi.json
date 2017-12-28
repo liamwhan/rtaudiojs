@@ -1,5 +1,6 @@
 [
     {
+        "id": 0,
         "probed": true,
         "name": "MX27AQ-8 (NVIDIA High Definition Audio)",
         "outputChannels": 2,
@@ -13,6 +14,7 @@
         "preferredSampleRate": 48000
     },
     {
+        "id": 1,
         "probed": true,
         "name": "Headphones (Rift Audio)",
         "outputChannels": 2,
@@ -26,6 +28,7 @@
         "preferredSampleRate": 48000
     },
     {
+        "id": 2,
         "probed": true,
         "name": "Realtek Digital Output (Realtek High Definition Audio)",
         "outputChannels": 2,
@@ -39,6 +42,7 @@
         "preferredSampleRate": 48000
     },
     {
+        "id": 3,
         "probed": true,
         "name": "Line (2- Steinberg UR44)",
         "outputChannels": 2,
@@ -52,6 +56,7 @@
         "preferredSampleRate": 44100
     },
     {
+        "id": 4,
         "probed": true,
         "name": "Line (2- Steinberg UR44)",
         "outputChannels": 0,
@@ -65,6 +70,7 @@
         "preferredSampleRate": 44100
     },
     {
+        "id": 5,
         "probed": true,
         "name": "Microphone (Rift Audio)",
         "outputChannels": 0,

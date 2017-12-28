@@ -20,7 +20,9 @@
 			"queue": "cpp",
 			"type_traits": "cpp",
 			"vector": "cpp",
-			"xtree": "cpp"
+			"xtree": "cpp",
+			"exception": "cpp",
+			"memory": "cpp"
 		},
 		"python.pythonPath": "C:\\Python27\\python.exe",
 	}

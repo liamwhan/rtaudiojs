@@ -31,8 +31,9 @@ RtAudio
 An object with details for an audio device on the host system. 
 | **Member**    | **Type** | **Description**    |
 |---------------|----------|--------------------|
-| `probed`      | `Boolean`| `true` if the probe was successful, `false` otherwise.     |
+| `id`          | `Number` | The device index RtAudio uses to identify the device (used when opening streams)    |
 | `name`        | `String` | The device name    |
+| `probed`      | `Boolean`| `true` if the probe was successful, `false` otherwise.     |
 | `outputChannels`  | `Number` | An integer representing the number of output channels  |
 | `inputChannels`   | `Number` | An integer representing the number of input channels   |
 | `duplexChannels`  | `Number` | An integer representing the number of duplex channels  |
@@ -40,6 +41,18 @@ An object with details for an audio device on the host system.
 | `isDefaultInput`  | `Boolean`| `true` if the host system reports this device as the default input, `false` otherwise. |
 | `sampleRates`     | `Array<Number>` | An array of sample rates supported by the device |
 | `preferredSampleRate` | `Number` | The preferred sample rate of the device (if any) reported by the host. |
+
+[Top](#contents)
+
+### RtStreamParams
+Specifies the parameters for a new audio stream. 
+| **Member**    | **Type** | **Description**    |
+|---------------|----------|--------------------|
+| `deviceId`    | `Number` | The index of the device to open a stream to                |
+| `nChannels`   | `Number` | The numbers of Channels the stream will write to           |
+| `firstChannel`| `Number` | First channel index on the device (default = 0)            |
+| `sampleRate`  | `Number` | The desired sample rate (sample frames per second) to request from the device |
+
 
 [Top](#contents)
 ## Methods
