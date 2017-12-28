@@ -31,7 +31,7 @@ void Probe(const FunctionCallbackInfo<Value> &args)
             String::NewFromUtf8(isolate, 
             "RtAudio could not detect any audio devices on the host.\n"
             "This is most commonly caused by:\n"
-            " - Running in a virtualised environment (a VM, or Windows "
+            "- Running in a virtualised environment (a VM, or Windows "
             "Subsystem for Linux) that does not have direct access to hardware.\n"
             "- Driver issues on the host OS."
             )));
