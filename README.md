@@ -19,7 +19,7 @@ This library contains NodeJS bindings for the C++ real-time audio library [RtAud
 - Python 2.x (required by `node-gyp`. I used v2.7.14)
 - `node-gyp`: `npm i -g node-gyp`
 
-## Option 2 - `windows-build-tools`
+### Option 2 - `windows-build-tools`
 `windows-build-tools` is an `npm` package that contains MSVC build tools and Python 2.7
 - Run the following command from an **ELEVATED** (Run as Administrator) Command Prompt:
     - `npm i -g --production --add-python-to-path windows-build-tools`
