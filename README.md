@@ -29,6 +29,7 @@ RtAudio
 -----
 ### RtDeviceInfo
 An object with details for an audio device on the host system. 
+
 | **Member**    | **Type** | **Description**    |
 |---------------|----------|--------------------|
 | `id`          | `Number` | The device index RtAudio uses to identify the device (used when opening streams)    |
@@ -45,7 +46,8 @@ An object with details for an audio device on the host system.
 [Top](#contents)
 
 ### RtStreamParams
-Specifies the parameters for a new audio stream. 
+Specifies the parameters for a new audio stream.
+
 | **Member**    | **Type** | **Description**    |
 |---------------|----------|--------------------|
 | `deviceId`    | `Number` | The index of the device to open a stream to                |
@@ -59,7 +61,8 @@ Specifies the parameters for a new audio stream.
 
 -----
 ### RtAudio.deviceProbe()
-| | |
+
+| Detail          | Info
 |-----------------|---------------------------------------------------------------------------|
 | **Description** | Probes the OS for available audio devices (sound cards, microphones etc.) and returns an object with details for each probed device|
 | **Parameters**  | None |
