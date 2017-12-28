@@ -16,8 +16,6 @@
                     "RtAudioJS.cc",
                     "lib/rtaudio/RtAudio.cpp"
                 ],
-                'cflags!': ['-fno-exceptions'],
-                'cflags_cc!': ['-fno-exceptions'],
                 'configurations': {
                     'Release': {
                         'VCCLCompilerTool': {
@@ -27,8 +25,8 @@
                     }
                 }
 
-
             }, {
+            # the WASAPI build will likely be removed before release as its less functional than DirectSound and I dont want multiple builds per platform.
                 'target_name': 'RTAJSWASAPI',  # RtAudioJs using WASAPI
                 'defines': ['__WINDOWS_WASAPI__'],
                 'link_settings': {
@@ -38,8 +36,6 @@
                     "RtAudioJS.cc",
                     "lib/rtaudio/RtAudio.cpp"
                 ],
-                'cflags': ['/EHsc'],
-                'cflags_cc!': ['-fno-exceptions'],
                 'configurations': {
                     'Release': {
                         'msvs_settings': {
@@ -51,6 +47,19 @@
                     }
                 }
             }]
+        }],
+        ['OS=="linux"', {
+            'target_name': 'RtAudioJS',
+            'defines': ['__LINUX_ALSA__'],
+            'sources': [
+                'RtAudioJS.cc',
+                'lib/rtaudio/RtAudio.cpp'
+            ],
+            'cflags!': ['-fnoexceptions'], 
+            'cflags_cc!': ['-fnoexceptions'],
+            'link_settings': {
+                'libraries': ['-lasound', '-lpthread']
+            },
         }]
     ]
 }
