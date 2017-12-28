@@ -12,9 +12,9 @@
                 'link_settings': {
                     'libraries': ['-lole32', '-lwinmm', '-ldsound', '-luser32']
                 },
-                "sources": [
-                    "RtAudioJS.cc",
-                    "lib/rtaudio/RtAudio.cpp"
+                'sources': [
+                    'RtAudioJS.cc',
+                    'lib/rtaudio/RtAudio.cpp'
                 ],
                 'configurations': {
                     'Release': {
@@ -49,17 +49,19 @@
             }]
         }],
         ['OS=="linux"', {
-            'target_name': 'RtAudioJS',
-            'defines': ['__LINUX_ALSA__'],
-            'sources': [
-                'RtAudioJS.cc',
-                'lib/rtaudio/RtAudio.cpp'
-            ],
-            'cflags!': ['-fnoexceptions'], 
-            'cflags_cc!': ['-fnoexceptions'],
-            'link_settings': {
-                'libraries': ['-lasound', '-lpthread']
-            },
+            'targets': [{
+                'target_name': 'RtAudioJS',
+                'defines': ['__LINUX_ALSA__'],
+                'sources': [
+                    'RtAudioJS.cc',
+                    'lib/rtaudio/RtAudio.cpp'
+                ],
+                'cflags!': ['-fno-exceptions'], 
+                'cflags_cc!': ['-fno-exceptions'],
+                'link_settings': {
+                    'libraries': ['-lasound', '-lpthread']
+                }
+            }]
         }]
     ]
 }
