@@ -56,8 +56,8 @@
                     'RtAudioJS.cc',
                     'lib/rtaudio/RtAudio.cpp'
                 ],
-                'cflags!': ['-fnoexceptions'], 
-                'cflags_cc!': ['-fnoexceptions'],
+                'cflags!': ['-fno-exceptions'], 
+                'cflags_cc!': ['-fno-exceptions'],
                 'link_settings': {
                     'libraries': ['-lasound', '-lpthread']
                 }
