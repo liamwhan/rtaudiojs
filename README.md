@@ -14,13 +14,13 @@ This library contains NodeJS bindings for the C++ real-time audio library [RtAud
 
 ## Installing Dependencies (Windows)
 ### Option 1 - Manual Install:
-- NodeJS v8.9.3 (may work on earlier versions but is untested)
-- MSVC Build Tools (Install Visual Studio with C++ Development enabled.)
+- NodeJS v8.9.3 (may work on earlier versions but is untested at this stage)
+- MSVC Build Tools (Install Visual Studio and select C++ Desktop Development packages.)
 - Python 2.x (required by `node-gyp`. I used v2.7.14)
 - `node-gyp`: `npm i -g node-gyp`
 
 ### Option 2 - `windows-build-tools`
-`windows-build-tools` is an `npm` package that contains MSVC build tools and Python 2.7
+`windows-build-tools` is an `npm` package for acquiring `node-gyp` dependencies easily. It contains the required MSVS build tools and Python 2.7
 - Run the following command from an **ELEVATED** (Run as Administrator) Command Prompt:
     - `npm i -g --production --add-python-to-path windows-build-tools`
 - This will install the required Microsoft build tools, Python 2.7 and also add python to your `%PATH%` environment variable so you should be able to run `node-gyp` as soon as it completes.
