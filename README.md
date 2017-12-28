@@ -1,7 +1,14 @@
 # RtAudioJS
+**IMPORTANT:** CURRENTLY UNSTABLE. Please read the [DISCLAIMER](#disclaimer) below
 
-**IMPORTANT:** Please read the [DISCLAIMER](#disclaimer) below
-## Description
+# Contents
+- [Description](#description)
+- [JS API Reference](#javascript-api-reference)
+- [Contributing](#contributing)
+- [Disclaimer](#disclaimer)
+- [Licenses](#rtaudio-license)
+
+# Description
 Exposes a real-time audio API to NodeJS, granting low-level IO access to system audio devices.
 
 This library contains NodeJS bindings for the C++ real-time audio library [RtAudio](https://github.com/thestk/rtaudio) by Gary P. Scavone (McGill University). You can find the the [Documentation for RtAudio here](https://music.mcgill.ca/~gary/rtaudio).
@@ -12,7 +19,109 @@ This library contains NodeJS bindings for the C++ real-time audio library [RtAud
 - RtAudio compiled in MS DirectSound mode: `__WINDOWS_DS__` (read more [here](http://www.music.mcgill.ca/~gary/rtaudio/compiling.html))
 - RtAudio compiled in Windows Audio Session API (WASAPI) mode: `__WINDOWS_WASAPI__` (read more [here](http://www.music.mcgill.ca/~gary/rtaudio/compiling.html))
 
-## Installing Dependencies (Windows)
+# Javascript API Reference
+
+RtAudio
+=======
+
+## Types
+
+-----
+### RtDeviceInfo
+An object with details for an audio device on the host system. 
+| **Member**    | **Type** | **Description**    |
+|---------------|----------|--------------------|
+| `probed`      | `Boolean`| `true` if the probe was successful, `false` otherwise.     |
+| `name`        | `String` | The device name    |
+| `outputChannels`  | `Number` | An integer representing the number of output channels  |
+| `inputChannels`   | `Number` | An integer representing the number of input channels   |
+| `duplexChannels`  | `Number` | An integer representing the number of duplex channels  |
+| `isDefaultOutput` | `Boolean`| `true` if the host system reports this device as the default output, `false` otherwise. |
+| `isDefaultInput`  | `Boolean`| `true` if the host system reports this device as the default input, `false` otherwise. |
+| `sampleRates`     | `Array<Number>` | An array of sample rates supported by the device |
+| `preferredSampleRate` | `Number` | The preferred sample rate of the device (if any) reported by the host. |
+
+[Top](#contents)
+## Methods
+
+-----
+### RtAudio.deviceProbe()
+| | |
+|-----------------|---------------------------------------------------------------------------|
+| **Description** | Probes the OS for available audio devices (sound cards, microphones etc.) and returns an object with details for each probed device|
+| **Parameters**  | None |
+| **Return Type** | `Array<`[`RtDeviceInfo`](#rtdeviceinfo)`>` An array of [`RtDeviceInfo`](#rtdeviceinfo) for each successfully probed audio device |
+
+#### Examples
+```javascript
+
+    const RtAudio = require('RtAudioJs');
+    console.log(RtAudio.deviceProbe());
+
+```
+
+Example Output:
+```javascript
+[
+    {
+        "probed": true,
+        "name": "Default Device",
+        "outputChannels": 2,
+        "inputChannels": 2,
+        "duplexChannels": 2,
+        "isDefaultOutput": true,
+        "isDefaultInput": true,
+        "sampleRates": [
+            4000,
+            5512,
+            8000,
+            9600,
+            11025,
+            16000,
+            22050,
+            32000,
+            44100,
+            48000,
+            88200,
+            96000,
+            176400,
+            192000
+        ],
+        "preferredSampleRate": 48000
+    },
+    {
+        "probed": true,
+        "name": "Line (2- Steinberg UR44)",
+        "outputChannels": 2,
+        "inputChannels": 2,
+        "duplexChannels": 2,
+        "isDefaultOutput": false,
+        "isDefaultInput": false,
+        "sampleRates": [
+            4000,
+            5512,
+            8000,
+            9600,
+            11025,
+            16000,
+            22050,
+            32000,
+            44100,
+            48000,
+            88200,
+            96000,
+            176400,
+            192000
+        ],
+        "preferredSampleRate": 48000
+    }
+]
+```
+[Top](#contents)
+
+# Contributing
+Contributions are welcome, instructions for setting up a development environment on Windows are below.
+## Installing Windows Dependencies 
 ### Option 1 - Manual Install:
 - NodeJS v8.9.3 (may work on earlier versions but is untested)
 - MSVC Build Tools (Install Visual Studio with C++ Development enabled.)

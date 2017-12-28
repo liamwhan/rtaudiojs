@@ -1,20 +1,25 @@
 {
-  "name": "nodeaddon",
-  "version": "1.0.0",
-  "description": "Hello World Node Addon",
+  "name": "rtaudiojs",
+  "version": "0.1.0",
+  "description": "NodeJS Bindings for the RtAudio C++ library by Gary P. Scavone of McGill University",
   "main": "index.js",
   "scripts": {
     "test": "tap test/dsound.js",
-    "build": "node-gyp clean && node-gyp configure && node-gyp build"
+    "build-wasapi": "buildwasapi.bat",
+    "build-ds": "buildds.bat"
   },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/hammus/nodeaddon.git"
   },
   "keywords": [
-    "spike",
-    "test",
-    "no-release"
+    "nodejs",
+    "audio",
+    "sound",
+    "music",
+    "native",
+    "rtaudio",
+    ""
   ],
   "author": "Liam Whan",
   "license": "MIT",

@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"terminal.integrated.shell.windows": "C:\\Windows\\System32\\cmd.exe",
+		"terminal.integrated.shellArgs.windows": [
+			"/k",
+			"D:\\shell\\shell.bat"
+		],
+		"files.associations": {
+			"xtr1common": "cpp",
+			"xlocale": "cpp",
+			"xstring": "cpp",
+			"xutility": "cpp",
+			"deque": "cpp",
+			"initializer_list": "cpp",
+			"queue": "cpp",
+			"type_traits": "cpp",
+			"vector": "cpp",
+			"xtree": "cpp"
+		},
+		"python.pythonPath": "C:\\Python27\\python.exe",
+	}
+}

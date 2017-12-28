@@ -3,3 +3,4 @@ build
 lib/
 .vscode
 nodeaddon.code-workspace
+.nyc_output

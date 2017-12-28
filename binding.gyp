@@ -1,53 +1,33 @@
 {
-    "targets": [
-        {
-            "target_name": "RtAudio",
-            "sources": [
-                "RtAudioJS.cc",
-                "lib/rtaudio/RtAudio.cpp"
+    "include_dirs": [
+        "lib/rtaudio",
+        "lib/rtaudio/include"
+    ],
+    'conditions': [
+        ['OS=="win"', {
+
+            "targets": [{
+                'target_name': 'RTAJSDS',  # RtAudioJs using MS DirectSound API
+                'defines': ['__WINDOWS_DS__'],
+                'link_settings': {
+                    'libraries': ['-lole32', '-lwinmm', '-ldsound', '-luser32']
+                },
+                "sources": [
+                    "RtAudioJS.cc",
+                    "lib/rtaudio/RtAudio.cpp"
                 ],
-            "include_dirs": [
-                "lib/rtaudio",
-                "lib/rtaudio/include"
-            ],
-            'conditions': [
-                ['OS=="win"', 
-                {
-                    'defines': [ '__WINDOWS_DS__'],
-                    'link_settings': {
-                        'libraries': ['-lole32', '-lwinmm' , '-ldsound']
-                    }
-                }],
-                ['OS=="linux"',
-                {
-                    'cflags!': [ '-fno-exceptions' ],
-                    'cflags_cc!': [ '-fno-exceptions' ],
-                    'defines': [ '__LINUX_ALSA__'],
-                    'link_settings': {
-                        'libraries': ['-lasound', '-lpthread']
-                    }
-                }]
-            ]
-        }
-        # ,{
-        #     "target_name": "RtAudioWASAPI",
-        #     "sources": [
-        #         "RtAudioJS.cpp",
-        #         "lib/rtaudio/RtAudio.cpp"
-        #         ],
-        #     "include_dirs": [
-        #         "lib/rtaudio",
-        #         "lib/rtaudio/include"
-        #     ],
-        #     'conditions': [
-        #         ['OS=="win"', 
-        #         {
-        #             'defines': [ '__WINDOWS_WASAPI__'],
-        #             'link_settings': {
-        #                 'libraries': ['-lole32', '-lwinmm' , '-lksuser', '-luuid']
-        #             }
-        #         }]
-        #     ]
-        # }
-        ]
+
+            }, {
+                'target_name': 'RTAJSWASAPI',  # RtAudioJs using WASAPI
+                'defines': ['__WINDOWS_WASAPI__'],
+                'link_settings': {
+                    'libraries': ['-lole32', '-lwinmm', '-lksuser', '-luuid']
+                },
+                "sources": [
+                    "RtAudioJS.cc",
+                    "lib/rtaudio/RtAudio.cpp"
+                ]
+            }]
+        }]
+    ]
 }
