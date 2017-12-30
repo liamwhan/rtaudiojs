@@ -22,7 +22,8 @@
 			"vector": "cpp",
 			"xtree": "cpp",
 			"exception": "cpp",
-			"memory": "cpp"
+			"memory": "cpp",
+			"ios": "cpp"
 		},
 		"python.pythonPath": "C:\\Python27\\python.exe",
 	}

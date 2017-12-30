@@ -7,7 +7,7 @@
         ['OS=="win"', {
 
             "targets": [{
-                'target_name': 'RTAJSDS',  # RtAudioJs using MS DirectSound API
+                'target_name': 'RtAudioJs',  # RtAudioJs using MS DirectSound API
                 'defines': ['__WINDOWS_DS__'],
                 'link_settings': {
                     'libraries': ['-lole32', '-lwinmm', '-ldsound', '-luser32']

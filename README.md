@@ -21,9 +21,6 @@ This library contains NodeJS bindings for the C++ real-time audio library [RtAud
 
 # Javascript API Reference
 
-RtAudio
-=======
-
 ## Types
 
 -----
@@ -60,7 +57,7 @@ Specifies the parameters for a new audio stream.
 ## Methods
 
 -----
-### RtAudio.deviceProbe()
+### `RtAudio.deviceProbe()`
 
 | Detail          | Info
 |-----------------|---------------------------------------------------------------------------|
@@ -76,7 +73,7 @@ Specifies the parameters for a new audio stream.
 
 ```
 
-Example Output:
+#### Example Output:
 ```javascript
 [
     {
@@ -104,36 +101,25 @@ Example Output:
             192000
         ],
         "preferredSampleRate": 48000
-    },
-    {
-        "probed": true,
-        "name": "Line (2- Steinberg UR44)",
-        "outputChannels": 2,
-        "inputChannels": 2,
-        "duplexChannels": 2,
-        "isDefaultOutput": false,
-        "isDefaultInput": false,
-        "sampleRates": [
-            4000,
-            5512,
-            8000,
-            9600,
-            11025,
-            16000,
-            22050,
-            32000,
-            44100,
-            48000,
-            88200,
-            96000,
-            176400,
-            192000
-        ],
-        "preferredSampleRate": 48000
-    }
+    } 
+    //... Additional connected Sound Devices
 ]
 ```
+
+ > **NOTE:** A device with name == "Default Device" or device with `isDefaultInput == true` or `isDefaultOutput == true` is a virtual device pointer to the device that is currently selected on the Host to play/record audio. If you are integrating RtAudioJs into your project, this is probably a good device for your application to use (write to/read from )
+
 [Top](#contents)
+
+
+### `RtAudio.setStreamParams(RtStreamParams params)`
+| Detail          | Info
+|-----------------|----------------------------------------------------------------------------|
+| **Description** | Probes the OS for available audio devices (sound cards, microphones etc.) and returns an object with details for each probed device |
+| **Parameters**  | [`RtStreamParams params`](#rtstreamparams)              |
+| **Return Type** | `Array<`[`RtDeviceInfo`](#rtdeviceinfo)`>` An array of [`RtDeviceInfo`](#rtdeviceinfo) for each successfully probed audio device |
+
+[Top](#contents)
+
 
 # Contributing
 Contributions are welcome, instructions for setting up a development environment on Windows are below.
