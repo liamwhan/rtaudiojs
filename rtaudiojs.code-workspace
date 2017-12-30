@@ -23,7 +23,11 @@
 			"xtree": "cpp",
 			"exception": "cpp",
 			"memory": "cpp",
-			"ios": "cpp"
+			"ios": "cpp",
+			"thread": "cpp",
+			"chrono": "cpp",
+			"tuple": "cpp",
+			"utility": "cpp"
 		},
 		"python.pythonPath": "C:\\Python27\\python.exe",
 	}
