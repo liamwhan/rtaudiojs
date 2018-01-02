@@ -11,16 +11,11 @@ console.log(streamParams);
 
 //Test Async Methods
 
-RtAudio.primes(3000, function(result) {
+RtAudio.factorize(9007199254740991, function(result) {
     console.log("From JS Callback");
-    console.log("result: ", result);
-    // console.log(`Random Result Value at ${i}:`, result[i]);
+    console.log("Factor: ", result);
+}, function() {
+    console.log("Facorization complete.");
 });
-// RtAudio.primes_progress(3000, function(result) {
-//     console.log("From JS Callback");
-//     console.log("result: ", result);
-//     // console.log(`Random Result Value at ${i}:`, result[i]);
-// }, function(progress) {
-//     console.log("Progress: ", progress);
-// });
+
 console.log("This should output before the result log");

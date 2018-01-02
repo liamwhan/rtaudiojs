@@ -9,6 +9,7 @@
 #include <thread>
 
 #include "RtStreamParams.h"
+#include "RtStreamWorker.h"
 #include "lib/rtaudio/RtAudio.h"
 
 namespace RtAudioJs
@@ -18,7 +19,6 @@ using namespace Nan;
 using namespace std;
 
 RtAudio::StreamParameters streamParamsRt;
-
 
 NAN_METHOD(Probe)
 {
@@ -240,14 +240,7 @@ class PrimeProgressWorker : public AsyncProgressWorker
     Callback *progress;
     int limit;
     vector<int> primes;
-
 };
-
-
-NAN_METHOD(StreamParamsInit)
-{
-
-}
 
 NAN_METHOD(Primes)
 {
@@ -262,6 +255,13 @@ NAN_METHOD(PrimesProgress)
     Callback *callback = new Callback(info[1].As<v8::Function>());
     Callback *progress = new Callback(info[2].As<v8::Function>());
     AsyncQueueWorker(new PrimeProgressWorker(callback, progress, limit));
+}
+
+NAN_METHOD(Factor)
+{
+    Callback *progress = new Callback(info[1].As<v8::Function>());
+    Callback *callback = new Callback(info[2].As<v8::Function>());
+    AsyncQueueWorker(new Factorizer(progress, callback, To<uint32_t>(info[0]).FromJust()));
 }
 
 // NOTE(liam): target is defined by the NAN_MODULE_INIT macro
@@ -281,6 +281,7 @@ NAN_MODULE_INIT(Init)
         target,
         New<v8::String>("primes_progress").ToLocalChecked(),
         GetFunction(New<v8::FunctionTemplate>(PrimesProgress)).ToLocalChecked());
+    Set(target, New<v8::String>("factorize").ToLocalChecked(), New<v8::FunctionTemplate>(Factor)->GetFunction());
 
     RtStreamParams::Init(target);
 }

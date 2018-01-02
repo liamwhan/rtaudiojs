@@ -33,7 +33,11 @@
 			"xfunctional": "cpp",
 			"xiosbase": "cpp",
 			"list": "cpp",
-			"xhash": "cpp"
+			"xhash": "cpp",
+			"map": "cpp",
+			"unordered_map": "cpp",
+			"mutex": "cpp",
+			"functional": "cpp"
 		},
 		"python.pythonPath": "C:\\Python27\\python.exe",
 	}
