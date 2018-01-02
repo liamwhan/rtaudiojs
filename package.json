@@ -4,9 +4,10 @@
   "description": "NodeJS Bindings for the RtAudio C++ library by Gary P. Scavone of McGill University",
   "main": "index.js",
   "scripts": {
-    "test": "tap test/tests.js",
-    "build": "node-gyp rebuild -j 12",
-    "debug": "node-gyp configure rebuild --debug --nodedir=\"D:\\Downloads\\node-v8.9.3\" -j12"
+    "test": "tap test/tests.js", 
+    "build": "node-gyp configure rebuild --debug --nodedir=\"D:\\Downloads\\node-v8.9.3\"",
+    "release": "node-gyp rebuild --release",
+    "set-parallel": "npm config set jobs 12"
   },
   "repository": {
     "type": "git",

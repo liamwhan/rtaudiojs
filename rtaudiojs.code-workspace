@@ -8,7 +8,9 @@
 		"terminal.integrated.shell.windows": "C:\\Windows\\System32\\cmd.exe",
 		"terminal.integrated.shellArgs.windows": [
 			"/k",
-			"D:\\shell\\shell.bat"
+			"D:\\shell\\vcvars141.bat",
+			"&",
+			"D:\\rtaudiojs\\scripts\\rt.bat"
 		],
 		"files.associations": {
 			"xtr1common": "cpp",
@@ -27,7 +29,11 @@
 			"thread": "cpp",
 			"chrono": "cpp",
 			"tuple": "cpp",
-			"utility": "cpp"
+			"utility": "cpp",
+			"iosfwd": "cpp",
+			"system_error": "cpp",
+			"xfunctional": "cpp",
+			"xiosbase": "cpp"
 		},
 		"python.pythonPath": "C:\\Python27\\python.exe",
 	}

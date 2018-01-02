@@ -1,15 +1,12 @@
 
 
-const         test      = require('tap').test
-            , dsound  = require('bindings')('RtAudioJs')
-            , wasapi  = require('bindings')('RTAJSWASAPI')
-            , dsDeviceInfo   = require('./fixtures/dsDeviceInfo.json')
-            , wDeviceInfo   = require('./fixtures/wasapi.json')
-            , streamParams = { deviceId: 0, nChannels: 2, firstChannel: 0, sampleRate: 48000}
-            , streamParams2 = { deviceId: 0, nChannels: 2, sampleRate: 48000} // no firstChanell - to test if default values works
-            ;
+const test = require('tap').test
+    , dsound = require('bindings')('RtAudioJs')
+    , dsDeviceInfo = require('./fixtures/dsDeviceInfo.json')
+    , streamParamsDefault = { deviceId: 0, nChannels: 2, firstChannel: 0, sampleRate: 48000 }
+    ;
 
-test('deviceProbe DirectSound', function(t) {
+test('deviceProbe', function (t) {
     t.plan(2);
     let deviceInfoResult;
     t.ok(deviceInfoResult = dsound.deviceProbe());
@@ -17,42 +14,60 @@ test('deviceProbe DirectSound', function(t) {
 });
 
 
-test('deviceProbe WASAPI', function(t) {
-    t.plan(2);
-    let deviceInfoResult;
-    t.ok(deviceInfoResult = wasapi.deviceProbe());
-    t.same(deviceInfoResult, wDeviceInfo);
+test('RtStreamParams Constructor tests', function (t) {
+
+    t.plan(14);
+
+    // Test Construction of 
+    let streamParamsResult
+        , streamParamsOnly1st = { deviceId: 0 }
+        , streamParams1and2 = { deviceId: 0, nChannels: 2 }
+        , streamParams12and3 = { deviceId: 0, nChannels: 2, firstChannel: 0 }
+        , streamParamsNo1FAIL = { nChannels: 2, firstChannel: 0, sampleRate: 48000 }
+        , deviceId = 0
+        , nChannels = 2
+        , firstChannel = 0
+        , sampleRate = 48000
+        ;
+
+    // Should construct successfully is all params passed as object or separately
+    t.doesNotThrow(function () {
+        streamParamsResult = new dsound.RtStreamParams(streamParamsDefault)
+    });
+    t.same(streamParamsResult, streamParamsDefault);
+    t.doesNotThrow(function () {
+        streamParamsResult = new dsound.RtStreamParams(deviceId, nChannels, sampleRate, firstChannel);
+    });
+    t.same(streamParamsResult, streamParamsDefault);
+
+    // Should construct successfully if only 1st argument (deviceId) is defined
+    t.doesNotThrow(function () {
+        streamParamsResult = new dsound.RtStreamParams(streamParamsOnly1st)
+    });
+    t.same(streamParamsResult, streamParamsDefault);
+    t.doesNotThrow(function () {
+        streamParamsResult = new dsound.RtStreamParams(deviceId);
+    });
+    t.same(streamParamsResult, streamParamsDefault);
+
+    // Should construct successfully if only 1st 2 arguments (deviceId, nChannels) are defined
+    t.doesNotThrow(function () {
+        streamParamsResult = new dsound.RtStreamParams(streamParams1and2);
+    });
+    t.same(streamParamsResult, streamParamsDefault);
+    t.doesNotThrow(function(){
+        streamParamsResult = new dsound.RtStreamParams(deviceId, nChannels);
+    });
+    t.same(streamParamsResult, streamParamsDefault);
+
+    //Throws SyntaxError if `new` not used
+    t.throws(function () {
+        streamParamsResult = dsound.RtStreamParams(streamParamsDefault);
+    }, new SyntaxError("RtStreamParams must be instantiated.\nThis class can only be used with the `new` keyword e.g.\n`let streamParams = new RtAudioJs.RtStreamParams(0, 2, 0, 48000);`"));
+
+    //Throws TypeError if no arguments passed.
+    t.throws(function () {
+        streamParamsResult = new dsound.RtStreamParams();
+    }, new TypeError("The \"deviceId\" argument is required and must be integer value"))
+
 });
-
-
-test('Get/Set Stream Params DirectSound', function(t) {
-    
-    t.plan(6);
-
-    // with explicit firstchannel
-    let getStreamParamsResult;
-    t.ok(dsound.setStreamParams(streamParams));
-    t.ok(getStreamParamsResult = dsound.getStreamParams());
-    t.same(getStreamParamsResult, streamParams);
-
-    // with default firstChannel
-    t.ok(dsound.setStreamParams(streamParams2));
-    t.ok(getStreamParamsResult = dsound.getStreamParams());
-    t.same(getStreamParamsResult, streamParams); //Should still have firstChannel set, so we compare with original streamParams
-    
-}); 
-
-test('Get/Set Stream Params WASAPI', function(t) {
-    
-    t.plan(6);
-
-    let getStreamParamsResult;
-    t.ok(wasapi.setStreamParams(streamParams));
-    t.ok(getStreamParamsResult = wasapi.getStreamParams());
-    t.same(getStreamParamsResult, streamParams);
-
-    t.ok(wasapi.setStreamParams(streamParams2));
-    t.ok(getStreamParamsResult = wasapi.getStreamParams());
-    t.same(getStreamParamsResult, streamParams); //Should still have firstChannel set, so we compare with original streamParams
-
-})

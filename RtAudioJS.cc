@@ -1,4 +1,5 @@
 #include <node.h>
+#include <node_object_wrap.h>
 #include <v8.h>
 #include <uv.h>
 #include <string>
@@ -8,112 +9,22 @@
 #include <chrono>
 #include <thread>
 
+#include "RtStreamParams.h"
 #include "lib/rtaudio/RtAudio.h"
 
-namespace demo
+namespace RtAudioJs
 {
 
 using namespace v8;
 using namespace std;
 
+
 RtAudio::StreamParameters streamParamsRt;
 Persistent<Number> sampleRate;
 
-void SetStreamParams(const FunctionCallbackInfo<Value> &args)
+void InitPoly(Local<Object> exports)
 {
-    Isolate *isolate = args.GetIsolate();
-
-    if (!args[0]->IsObject())
-    {
-        isolate->ThrowException(Exception::TypeError(
-            String::NewFromUtf8(isolate, "An RtStreamParams object is required:\nRtAudio.setStreamParams({deviceId: 0, nChannels: 2, firstChannel: 0, sampleRate: 48000 });")));
-        return;
-    }
-
-    Local<Object> _streamParamsJs = Local<Object>::New(isolate, args[0]->ToObject());
-
-    // NOTE(liam): Cleanest way I have found to create object keys to access JS Hashmap
-    Local<String> deviceIdKey = String::NewFromUtf8(isolate, "deviceId");
-    Local<String> nChannelsKey = String::NewFromUtf8(isolate, "nChannels");
-    Local<String> firstChannelKey = String::NewFromUtf8(isolate, "firstChannel");
-    Local<String> sampleRateKey = String::NewFromUtf8(isolate, "sampleRate");
-
-    if (
-        _streamParamsJs->Get(deviceIdKey)->IsNullOrUndefined() ||
-        !_streamParamsJs->Get(deviceIdKey)->IsNumber() ||
-        !_streamParamsJs->Get(deviceIdKey)->IsUint32())
-    {
-        isolate->ThrowException(Exception::TypeError(
-            String::NewFromUtf8(isolate, "The \"deviceId\" property is required and must be integer value")));
-        return;
-    }
-
-    if (
-        _streamParamsJs->Get(nChannelsKey)->IsNullOrUndefined() ||
-        !_streamParamsJs->Get(nChannelsKey)->IsNumber() ||
-        !_streamParamsJs->Get(nChannelsKey)->IsUint32())
-    {
-        isolate->ThrowException(Exception::TypeError(
-            String::NewFromUtf8(isolate, "The \"nChannels\" property is required and must be integer value")));
-        return;
-    }
-
-    if (
-        _streamParamsJs->Get(sampleRateKey)->IsNullOrUndefined() ||
-        !_streamParamsJs->Get(sampleRateKey)->IsNumber() ||
-        !_streamParamsJs->Get(sampleRateKey)->IsUint32())
-    {
-        isolate->ThrowException(Exception::TypeError(
-            String::NewFromUtf8(isolate, "The \"sampleRate\" property is required and must be integer value")));
-        return;
-    }
-
-    // NOTE(liam): Don't throw if firstChannel undefined as it has a default value
-    if (!_streamParamsJs->Get(firstChannelKey)->IsNullOrUndefined())
-    {
-        // User has passed in a StreamParams object with params.firstChannel defined. Check the type.
-        if (
-            !_streamParamsJs->Get(firstChannelKey)->IsNumber() ||
-            !_streamParamsJs->Get(firstChannelKey)->IsUint32())
-        {
-
-            isolate->ThrowException(Exception::TypeError(
-                String::NewFromUtf8(isolate, "The \"firstChannel\" property must be an integer")));
-            return;
-        }
-
-        streamParamsRt.firstChannel = _streamParamsJs->Get(firstChannelKey)->Uint32Value();
-    }
-
-    streamParamsRt.deviceId = _streamParamsJs->Get(deviceIdKey)->Uint32Value();
-    streamParamsRt.nChannels = _streamParamsJs->Get(nChannelsKey)->Uint32Value();
-    sampleRate.Reset(isolate, _streamParamsJs->Get(sampleRateKey)->ToNumber(isolate)); //sampleRate isn't actually a member of RtAudio::StreamParameters we just allow JS users to set it here for convenience
-
-    args.GetReturnValue().Set(Boolean::New(isolate, true));
-}
-
-// Return the current StreamParams (RtAudio::StreamParameters is a struct so it will always have zeroed out values to return);
-void GetStreamParams(const FunctionCallbackInfo<Value> &args)
-{
-
-    Isolate *isolate = args.GetIsolate();
-    Local<Object> _streamParams = Object::New(isolate);
-
-    _streamParams->Set(
-        String::NewFromUtf8(isolate, "deviceId"),
-        Number::New(isolate, streamParamsRt.deviceId));
-    _streamParams->Set(
-        String::NewFromUtf8(isolate, "nChannels"),
-        Number::New(isolate, streamParamsRt.nChannels));
-    _streamParams->Set(
-        String::NewFromUtf8(isolate, "firstChannel"),
-        Number::New(isolate, streamParamsRt.firstChannel));
-    _streamParams->Set(
-        String::NewFromUtf8(isolate, "sampleRate"),
-        Local<Number>::New(isolate, sampleRate));
-
-    // Not actually on the RtAudio::StreamParameters struct but the addon bundles this into streamParams.
-    args.GetReturnValue().Set(_streamParams);
+    RtStreamParams::Init(exports);
 }
 
 void Probe(const FunctionCallbackInfo<Value> &args)
@@ -239,7 +150,6 @@ void Probe(const FunctionCallbackInfo<Value> &args)
         jsDevices->Set(i, jsInfo);
     }
 
-    //
     args.GetReturnValue().Set(jsDevices);
 }
 
@@ -248,17 +158,17 @@ struct AsyncWork
     uv_work_t request;
     Persistent<Function> callback;
 
-    std::vector<uint32_t> locations;
-    std::vector<uint32_t> results;
+    std::vector<uint> locations;
+    std::vector<uint> results;
 };
 
 static void AsyncDoWork(uv_work_t *req)
 {
     AsyncWork *work = static_cast<AsyncWork *>(req->data);
 
-    uint32_t count = work->locations.size();
+    uint count = work->locations.size();
     work->results.resize(count);
-    for (uint32_t i = 0; i < count; ++i)
+    for (uint i = 0; i < count; ++i)
     {
         work->results[i] = work->locations[i] * work->locations[i];
     }
@@ -279,10 +189,10 @@ static void AsyncWorkComplete(uv_work_t *req, int status)
 
     // the work has been done, and now we pack the results
     // vector into a Local array on the event-thread's stack.
-    uint32_t count = work->results.size();
+    uint count = work->results.size();
     for (unsigned int i = 0; i < count; i++)
     {
-        uint32_t result = work->results[i];
+        uint result = work->results[i];
         result_list->Set(i, Number::New(isolate, result));
     }
 
@@ -330,8 +240,8 @@ void AsyncTestJS(const FunctionCallbackInfo<Value> &args)
     work->callback.Reset(isolate, callback);
 
     //Copy Js Array vals to vector on the heap
-    uint32_t count = input->Length();
-    for (uint32_t i = 0; i < count; ++i)
+    uint count = input->Length();
+    for (uint i = 0; i < count; ++i)
     {
         work->locations.push_back(input->Get(i)->Uint32Value());
     }
@@ -348,9 +258,9 @@ void AsyncTestJS(const FunctionCallbackInfo<Value> &args)
 void Init(Local<Object> exports)
 {
     NODE_SET_METHOD(exports, "deviceProbe", Probe);
-    NODE_SET_METHOD(exports, "setStreamParams", SetStreamParams);
-    NODE_SET_METHOD(exports, "getStreamParams", GetStreamParams);
     NODE_SET_METHOD(exports, "asyncTest", AsyncTestJS);
+    RtStreamParams::Init(exports);
+
 }
 
 // NOTE(liam): Registers the init function with node gyp
