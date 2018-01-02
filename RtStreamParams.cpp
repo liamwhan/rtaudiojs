@@ -1,37 +1,51 @@
 #include "RtStreamParams.h"
-#include <node.h>
-#include <node_object_wrap.h>
-#include <v8.h>
 
 namespace RtAudioJs
 {
-
-bool RtStreamParams::IsUndefinedOrNotNumber(Local<Value> val)
+extern bool IsUndefinedOrNotNumber(v8::Local<v8::Value> val)
 {
     return val->IsNullOrUndefined() || !val->IsNumber() || !val->IsUint32();
+} // IsUndefinedOrNotNumber
 
-} // RtStreamParams::IsUndefinedOrNotNumber
-
-void RtStreamParams::New(const FunctionCallbackInfo<Value> &args)
+NAN_MODULE_INIT(RtStreamParams::Init)
 {
-    Isolate *isolate = args.GetIsolate();
+    v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(RtStreamParams::New);
 
+    //Prepare constructor template
+    tpl->SetClassName(Nan::New<v8::String>("RtStreamParams").ToLocalChecked());
+    tpl->InstanceTemplate()->SetInternalFieldCount(1);
+
+    v8::Local<v8::ObjectTemplate> instanceTmpl = tpl->InstanceTemplate();
+
+    SetAccessor(instanceTmpl, Nan::New<v8::String>("deviceId").ToLocalChecked(), RtStreamParams::GetProperty, RtStreamParams::SetProperty);
+    SetAccessor(instanceTmpl, Nan::New<v8::String>("nChannels").ToLocalChecked(), RtStreamParams::GetProperty, RtStreamParams::SetProperty);
+    SetAccessor(instanceTmpl, Nan::New<v8::String>("firstChannel").ToLocalChecked(), RtStreamParams::GetProperty, RtStreamParams::SetProperty);
+    SetAccessor(instanceTmpl, Nan::New<v8::String>("sampleRate").ToLocalChecked(), RtStreamParams::GetProperty, RtStreamParams::SetProperty);
+
+    Nan::Set(target,
+             Nan::New<v8::String>("RtStreamParams").ToLocalChecked(),
+             tpl->GetFunction());
+}
+
+NAN_METHOD(RtStreamParams::New)
+{
     // Throw an exception if used without JS `new` keyword.
-    if (!args.IsConstructCall())
+    if (!info.IsConstructCall())
     {
-        isolate->ThrowException(Exception::SyntaxError(
-            String::NewFromUtf8(isolate,
-                                "RtStreamParams must be instantiated.\n"
-                                "This class can only be used with the `new` keyword e.g.\n"
-                                "`let streamParams = new RtAudioJs.RtStreamParams(0, 2, 0, 48000);`")));
+        Nan::ThrowSyntaxError(
+            Nan::New<v8::String>(
+                "RtStreamParams must be instantiated.\n"
+                "This class can only be used with the `new` keyword e.g.\n"
+                "`let streamParams = new RtAudioJs.RtStreamParams(0, 2, 0, 48000);`")
+                .ToLocalChecked());
         return;
     }
 
-   // Intermediates for convenience
-    Local<Number> deviceIdNum;
-    Local<Number> nChannelsNum;
-    Local<Number> firstChannelNum;
-    Local<Number> sampleRateNum;
+    // Intermediates for convenience
+    v8::Local<v8::Number> deviceIdNum;
+    v8::Local<v8::Number> nChannelsNum;
+    v8::Local<v8::Number> firstChannelNum;
+    v8::Local<v8::Number> sampleRateNum;
 
     // The uint values that we'll store in the end
     uint deviceIdInt;
@@ -40,45 +54,45 @@ void RtStreamParams::New(const FunctionCallbackInfo<Value> &args)
     uint sampleRateInt;
 
     // Was an options object passed?
-    if (args[0]->IsObject())
+    if (info[0]->IsObject())
     {
-        Local<Object> params = args[0]->ToObject();
-        Local<String> deviceIdKey = String::NewFromUtf8(isolate, "deviceId");
-        Local<String> nChannelsKey = String::NewFromUtf8(isolate, "nChannels");
-        Local<String> firstChannelKey = String::NewFromUtf8(isolate, "firstChannel");
-        Local<String> sampleRateKey = String::NewFromUtf8(isolate, "sampleRate");
+        v8::Local<v8::Object> params = info[0]->ToObject();
+        v8::Local<v8::String> deviceIdKey = Nan::New<v8::String>("deviceId").ToLocalChecked();
+        v8::Local<v8::String> nChannelsKey = Nan::New<v8::String>("nChannels").ToLocalChecked();
+        v8::Local<v8::String> firstChannelKey = Nan::New<v8::String>("firstChannel").ToLocalChecked();
+        v8::Local<v8::String> sampleRateKey = Nan::New<v8::String>("sampleRate").ToLocalChecked();
 
-         // Don't default to a deviceId if none was passed, as this could result in difficult to locate bugs for the EU.
+        // Don't default to a deviceId if none was passed, as this could result in difficult to locate bugs for the EU.
         if (IsUndefinedOrNotNumber(params->Get(deviceIdKey)))
         {
-            isolate->ThrowException(Exception::TypeError(
-                String::NewFromUtf8(isolate, "The \"deviceId\" property is required and must be integer value")));
+            Nan::ThrowTypeError(
+                Nan::New<v8::String>("The \"deviceId\" property is required and must be integer value").ToLocalChecked());
             return;
         }
 
-        deviceIdNum = Number::New(isolate, params->Get(deviceIdKey)->NumberValue());
-        nChannelsNum = (IsUndefinedOrNotNumber(params->Get(nChannelsKey))) ? Number::New(isolate, 2) : Number::New(isolate, params->Get(nChannelsKey)->NumberValue());
-        firstChannelNum = (IsUndefinedOrNotNumber(params->Get(firstChannelKey))) ? Number::New(isolate, 0) :  Number::New(isolate, params->Get(firstChannelKey)->NumberValue());
-        sampleRateNum = (IsUndefinedOrNotNumber(params->Get(sampleRateKey))) ? Number::New(isolate, 48000) :Number::New(isolate, params->Get(sampleRateKey)->NumberValue());
+        deviceIdNum = Nan::New<v8::Number>(params->Get(deviceIdKey)->NumberValue());
+        nChannelsNum = (IsUndefinedOrNotNumber(params->Get(nChannelsKey))) ? Nan::New<v8::Number>(2) : Nan::New<v8::Number>(params->Get(nChannelsKey)->NumberValue());
+        firstChannelNum = (IsUndefinedOrNotNumber(params->Get(firstChannelKey))) ? Nan::New<v8::Number>(0) : Nan::New<v8::Number>(params->Get(firstChannelKey)->NumberValue());
+        sampleRateNum = (IsUndefinedOrNotNumber(params->Get(sampleRateKey))) ? Nan::New<v8::Number>(48000) : Nan::New<v8::Number>(params->Get(sampleRateKey)->NumberValue());
     }
     else
     {
         // Assume parameters passed separately.
-        
+
         // Don't default to a deviceId if none was passed, as this could result in difficult to locate bugs for the EU.
-        if (IsUndefinedOrNotNumber(args[0]))
+        if (IsUndefinedOrNotNumber(info[0]))
         {
-            isolate->ThrowException(Exception::TypeError(
-                String::NewFromUtf8(isolate, "The \"deviceId\" argument is required and must be integer value")));
+            Nan::ThrowTypeError(
+                Nan::New<v8::String>("The \"deviceId\" argument is required and must be integer value").ToLocalChecked());
             return;
         }
-        deviceIdNum = Number::New(isolate, args[0]->NumberValue());
-        
+        deviceIdNum = Nan::New<v8::Number>(info[0]->NumberValue());
+
         //Get values or set Defaults for everything else
-        uint argsLength = args.Length();
-        nChannelsNum = ((argsLength >= 2) && (!IsUndefinedOrNotNumber(args[1]))) ? Number::New(isolate, args[1]->NumberValue()) : Number::New(isolate, 2);
-        sampleRateNum = ((argsLength >= 3) && (!IsUndefinedOrNotNumber(args[2]))) ? Number::New(isolate, args[2]->NumberValue()) : Number::New(isolate, 48000);
-        firstChannelNum = ((argsLength > 3) && (!IsUndefinedOrNotNumber(args[3]))) ? Number::New(isolate, args[3]->NumberValue()) : Number::New(isolate, 0);
+        uint argsLength = info.Length();
+        nChannelsNum = ((argsLength >= 2) && (!IsUndefinedOrNotNumber(info[1]))) ? Nan::New<v8::Number>(info[1]->NumberValue()) : Nan::New<v8::Number>(2);
+        sampleRateNum = ((argsLength >= 3) && (!IsUndefinedOrNotNumber(info[2]))) ? Nan::New<v8::Number>(info[2]->NumberValue()) : Nan::New<v8::Number>(48000);
+        firstChannelNum = ((argsLength > 3) && (!IsUndefinedOrNotNumber(info[3]))) ? Nan::New<v8::Number>(info[3]->NumberValue()) : Nan::New<v8::Number>(0);
     }
 
     // Convert to C++ types
@@ -89,43 +103,41 @@ void RtStreamParams::New(const FunctionCallbackInfo<Value> &args)
 
     // Create Wrapped Object and return
     RtStreamParams *obj = new RtStreamParams(deviceIdInt, nChannelsInt, firstChannelInt, sampleRateInt);
-    obj->Wrap(args.This());
-    args.GetReturnValue().Set(args.This());
-
-} // RtStreamParams::New
-
+    obj->Wrap(info.This());
+    info.GetReturnValue().Set(info.This());
+}
 
 // Get Accessor. Allows for property access via dot syntax in JS e.g. `if(steamParams.deviceId == 0)`
-void RtStreamParams::GetProperty(Local<String> property, const PropertyCallbackInfo<Value> &info)
+NAN_GETTER(RtStreamParams::GetProperty)
 {
-    Isolate *isolate = info.GetIsolate();
+    v8::Isolate *isolate = info.GetIsolate();
     // Unwrap (Cast) &info as an RtStreamParams object
     RtStreamParams *obj = ObjectWrap::Unwrap<RtStreamParams>(info.This());
 
     // Cast the property as a C string
     v8::String::Utf8Value s(property);
-    std::string str(*s, s.length());
+    std::string str(*s);
 
     //Identify the property and return the correct value;
     if (str == "deviceId")
     {
-        info.GetReturnValue().Set(Number::New(isolate, obj->deviceId_));
+        info.GetReturnValue().Set(Nan::New<v8::Number>(obj->deviceId_));
     }
     else if (str == "nChannels")
     {
-        info.GetReturnValue().Set(Number::New(isolate, obj->nChannels_));
+        info.GetReturnValue().Set(Nan::New<v8::Number>(obj->nChannels_));
     }
     else if (str == "firstChannel")
     {
-        info.GetReturnValue().Set(Number::New(isolate, obj->firstChannel_));
+        info.GetReturnValue().Set(Nan::New<v8::Number>(obj->firstChannel_));
     }
     else if (str == "sampleRate")
     {
-        info.GetReturnValue().Set(Number::New(isolate, obj->sampleRate_));
+        info.GetReturnValue().Set(Nan::New<v8::Number>(obj->sampleRate_));
     }
 } // RtStreamParams::GetProperty
 
-void RtStreamParams::SetProperty(Local<String> property, Local<Value> value, const PropertyCallbackInfo<void> &info)
+NAN_SETTER(RtStreamParams::SetProperty)
 {
 
     RtStreamParams *obj = ObjectWrap::Unwrap<RtStreamParams>(info.This());
@@ -151,27 +163,5 @@ void RtStreamParams::SetProperty(Local<String> property, Local<Value> value, con
     }
 
 } // RtStreamParams::SetProperty
-
-void RtStreamParams::Init(Local<Object> exports)
-{
-
-    Isolate *isolate = exports->GetIsolate();
-
-    //Prepare constructor template
-    Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-    tpl->SetClassName(String::NewFromUtf8(isolate, "RtStreamParams"));
-    tpl->InstanceTemplate()->SetInternalFieldCount(1);
-
-    tpl->InstanceTemplate()->SetAccessor(String::NewFromUtf8(isolate, "deviceId"), GetProperty, SetProperty);
-    tpl->InstanceTemplate()->SetAccessor(String::NewFromUtf8(isolate, "nChannels"), GetProperty, SetProperty);
-    tpl->InstanceTemplate()->SetAccessor(String::NewFromUtf8(isolate, "firstChannel"), GetProperty, SetProperty);
-    tpl->InstanceTemplate()->SetAccessor(String::NewFromUtf8(isolate, "sampleRate"), GetProperty, SetProperty);
-
-    exports->Set(
-        String::NewFromUtf8(isolate, "RtStreamParams"),
-        tpl->GetFunction());
-
-} // RtStreamParams::Init
-
 
 } // namespace RtAudioJs

@@ -1,5 +1,3 @@
-
-
 const test = require('tap').test
     , dsound = require('bindings')('RtAudioJs')
     , dsDeviceInfo = require('./fixtures/dsDeviceInfo.json')
