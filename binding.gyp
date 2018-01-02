@@ -1,5 +1,6 @@
 {
     "include_dirs": [
+        "<!(node -r \"require('nan')\")",
         "lib/rtaudio",
         "lib/rtaudio/include"
     ],
@@ -28,31 +29,6 @@
 
             }]
         }]
-        #     , {
-        #     # the WASAPI build will likely be removed before release as its less functional than DirectSound and I dont want multiple builds per platform.
-        #         'target_name': 'RTAJSWASAPI',  # RtAudioJs using WASAPI
-        #         'defines': ['__WINDOWS_WASAPI__'],
-        #         'link_settings': {
-        #             'libraries': ['-lole32', '-lwinmm', '-lksuser', '-luuid']
-        #         },
-        #         "sources": [
-        #             'RtAudioJS.cc',
-        #             'RtStreamParams.cpp',
-        #             'lib/rtaudio/RtAudio.cpp',
-        #         ],
-        #         'configurations': {
-        #             'Release': {
-        #                 'msvs_settings': {
-        #                     'VCCLCompilerTool': {
-        #                         'ExceptionHandling': '1',
-        #                         'AdditionalOptions': ['/EHsc']
-        #                     }
-        #                 }
-        #             }
-        #         }
-        #     }]
-        
-        # ],
         ,['OS=="linux"', {
             'targets': [{
                 'target_name': 'RtAudioJS',

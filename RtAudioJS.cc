@@ -2,6 +2,7 @@
 #include <node_object_wrap.h>
 #include <v8.h>
 #include <uv.h>
+
 #include <string>
 #include <iostream>
 #include <vector>
@@ -264,5 +265,5 @@ void Init(Local<Object> exports)
 }
 
 // NOTE(liam): Registers the init function with node gyp
-NODE_MODULE(NODE_GYP_MODULE_NAME, Init);
+NODE_MODULE(RtAudioJs, Init);
 }

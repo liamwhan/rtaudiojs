@@ -8,9 +8,9 @@
 		"terminal.integrated.shell.windows": "C:\\Windows\\System32\\cmd.exe",
 		"terminal.integrated.shellArgs.windows": [
 			"/k",
-			"D:\\shell\\vcvars141.bat",
+			"D:\\rtaudiojs\\scripts\\rt.bat",
 			"&",
-			"D:\\rtaudiojs\\scripts\\rt.bat"
+			"D:\\shell\\vcvars141.bat"
 		],
 		"files.associations": {
 			"xtr1common": "cpp",

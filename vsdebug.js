@@ -1,4 +1,4 @@
-const RtAudio = require('./build/Debug/RtAudioJs');
+const RtAudio = require('./build/Release/RtAudioJs');
 
 
 console.log(RtAudio);
@@ -8,23 +8,6 @@ streamParams.sampleRate = 44100;
 console.log(streamParams);
 
  // Should construct successfully is all params passed as object or separately
- streamParamsResult = new RtAudio.RtStreamParams(streamParamsDefault);
- t.same(streamParamsResult, streamParamsDefault);
- streamParamsResult = new RtAudio.RtStreamParams(deviceId, nChannels,  sampleRate, firstChannel));
- t.same(streamParamsResult, streamParamsDefault);
-
- // Should construct successfully if only 1st argument (deviceId) is defined
- streamParamsResult = new RtAudio.RtStreamParams(streamParamsOnly1st));
- t.same(streamParamsResult, streamParamsDefault);
- streamParamsResult = new RtAudio.RtStreamParams(deviceId));
- t.same(streamParamsResult, streamParamsDefault);
- 
- // Should construct successfully if only 1st 2 arguments (deviceId, nChannels) are defined
- streamParamsResult = new RtAudio.RtStreamParams(streamParams1and2));
- t.same(streamParamsResult, streamParamsDefault);
- streamParamsResult = new RtAudio.RtStreamParams(deviceId, nChannels));
- t.same(streamParamsResult, streamParamsDefault);
-
 //Test Async Methods
 // randomInts = [];
 // for(let i = 0; i<1000;i++)
