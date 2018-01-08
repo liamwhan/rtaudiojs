@@ -1,0 +1,116 @@
+[
+  {
+    "probed": true,
+    "id": 0,
+    "name": "290b: Liam's Headphones",
+    "outputChannels": 0,
+    "inputChannels": 1,
+    "duplexChannels": 0,
+    "isDefaultOutput": false,
+    "isDefaultInput": false,
+    "sampleRates": [
+      16000
+    ],
+    "preferredSampleRate": 16000
+  },
+  {
+    "probed": true,
+    "id": 1,
+    "name": "290b: Liam's Headphones",
+    "outputChannels": 2,
+    "inputChannels": 0,
+    "duplexChannels": 0,
+    "isDefaultOutput": true,
+    "isDefaultInput": false,
+    "sampleRates": [
+      16000,
+      44100
+    ],
+    "preferredSampleRate": 44100
+  },
+  {
+    "probed": true,
+    "id": 2,
+    "name": "Apple Inc.: Built-in Microphone",
+    "outputChannels": 0,
+    "inputChannels": 2,
+    "duplexChannels": 0,
+    "isDefaultOutput": false,
+    "isDefaultInput": false,
+    "sampleRates": [
+      44100,
+      48000,
+      88200,
+      96000
+    ],
+    "preferredSampleRate": 48000
+  },
+  {
+    "probed": true,
+    "id": 3,
+    "name": "Apple Inc.: Built-in Output",
+    "outputChannels": 2,
+    "inputChannels": 0,
+    "duplexChannels": 0,
+    "isDefaultOutput": false,
+    "isDefaultInput": false,
+    "sampleRates": [
+      44100,
+      48000,
+      96000
+    ],
+    "preferredSampleRate": 48000
+  },
+  {
+    "probed": true,
+    "id": 4,
+    "name": "ma++ ingalls for Cycling '74: Soundflower (2ch)",
+    "outputChannels": 2,
+    "inputChannels": 2,
+    "duplexChannels": 2,
+    "isDefaultOutput": false,
+    "isDefaultInput": true,
+    "sampleRates": [
+      44100,
+      48000,
+      88200,
+      96000,
+      176400,
+      192000
+    ],
+    "preferredSampleRate": 48000
+  },
+  {
+    "probed": true,
+    "id": 5,
+    "name": "ma++ ingalls for Cycling '74: Soundflower (64ch)",
+    "outputChannels": 64,
+    "inputChannels": 64,
+    "duplexChannels": 64,
+    "isDefaultOutput": false,
+    "isDefaultInput": false,
+    "sampleRates": [
+      44100,
+      48000,
+      88200,
+      96000,
+      176400,
+      192000
+    ],
+    "preferredSampleRate": 48000
+  },
+  {
+    "probed": true,
+    "id": 6,
+    "name": "Rogue Amoeba Software, Inc.: Instant On Sound Effects",
+    "outputChannels": 2,
+    "inputChannels": 0,
+    "duplexChannels": 0,
+    "isDefaultOutput": false,
+    "isDefaultInput": false,
+    "sampleRates": [
+      44100
+    ],
+    "preferredSampleRate": 44100
+  }
+]

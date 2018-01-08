@@ -1,14 +1,15 @@
-const test = require('tap').test
-    , dsound = require('bindings')('RtAudioJs')
-    , dsDeviceInfo = require('./fixtures/dsDeviceInfo.json')
-    , streamParamsDefault = { deviceId: 0, nChannels: 2, firstChannel: 0, sampleRate: 48000 }
+const test                  = require('tap').test
+    , dsound                = require('bindings')('RtAudioJs')
+    , platform              = require('os').platform()
+    , deviceInfo            = require(__dirname + "/fixtures/DeviceInfo." + platform + ".json")
+    , streamParamsDefault   = { deviceId: 0, nChannels: 2, firstChannel: 0, sampleRate: 48000 }
     ;
 
 test('deviceProbe', function (t) {
     t.plan(2);
     let deviceInfoResult;
     t.ok(deviceInfoResult = dsound.deviceProbe());
-    t.same(deviceInfoResult, dsDeviceInfo);
+    t.same(deviceInfoResult, deviceInfo);
 });
 
 
