@@ -31,7 +31,7 @@
         }]
         ,['OS=="linux"', {
             'targets': [{
-                'target_name': 'RtAudioJS',
+                'target_name': 'RtAudioJs',
                 'defines': ['__LINUX_ALSA__'],
                 'sources': [
                     'RtAudioJS.cc',
@@ -42,6 +42,35 @@
                 'cflags_cc!': ['-fno-exceptions'],
                 'link_settings': {
                     'libraries': ['-lasound', '-lpthread']
+                }
+            }]
+        }]
+        ,['OS=="mac"', {
+            'targets': [{
+                'target_name': 'RtAudioJs',
+                'defines': ['__MACOSX_CORE__'],
+                'include_dirs': 
+                [
+                   "<!(node -e \"require('nan')\")",
+                   "lib/rtaudio", 
+                   "lib/rtaudio/include", 
+                ],
+                'xcode_settings': {
+                    'GCC_ENABLE_CPP_EXCEPTIONS': 'YES'
+                },
+                'sources': [
+                    'RtAudioJS.cc',
+                    'RtStreamParams.cpp',
+                    'lib/rtaudio/RtAudio.cpp'
+                ],
+                'cflags!': ['-fno-exceptions'], 
+                'cflags_cc!': ['-fno-exceptions'],
+                'link_settings': {
+                    'libraries': [
+                        '-lpthread',
+                        'CoreAudio.framework',
+                        'CoreFoundation.framework'
+                        ]
                 }
             }]
         }]
