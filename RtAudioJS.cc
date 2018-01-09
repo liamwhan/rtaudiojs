@@ -9,7 +9,6 @@
 #include <thread>
 
 #include "RtStreamParams.h"
-#include "RtStreamWorker.h"
 #include "lib/rtaudio/RtAudio.h"
 
 namespace RtAudioJs
@@ -19,6 +18,44 @@ using namespace Nan;
 using namespace std;
 
 RtAudio::StreamParameters streamParamsRt;
+
+struct AsyncWork
+{
+    uv_async_t async;
+    std::vector<string> msgArr;
+    std::vector<v8::Persistent<v8::Function, v8::CopyablePersistentTraits<v8::Function>>> handlers;
+    uv_rwlock_t lock;
+};
+
+// NOTE: Not a NAN_METHOD
+// this is a C++ land method that is called by the Worker Thread when
+// there is a buffer available for write.
+void RequestBufferJS(uv_async_t *async)
+{
+    v8::Isolate *isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope handleScope(isolate);
+
+    // async->data is whatever we define it to be so here we are casting it to an AsyncWork struct *defined above
+    AsyncWork *work = static_cast<AsyncWork*>(async->data);
+
+    // Lock the work object for read write
+    uv_rwlock_wrlock(&work->lock);
+
+    // Make a copy of the vector (we may not do this)
+    std::vector<string> msgArr = work->msgArr;
+    work->msgArr.clear();
+
+    // Unlock the mutex. 
+    uv_rwlock_wrunlock(&work->lock);
+
+    unsigned int msgCount = msgArr.size();
+    for (unsigned int i = 0; i < msgCount; ++i) {
+        // Processing
+    }
+
+
+    // Lock the 
+}
 
 NAN_METHOD(Probe)
 {
@@ -144,126 +181,6 @@ NAN_METHOD(Probe)
     info.GetReturnValue().Set(jsDevices);
 }
 
-void find_primes(int limit, vector<int> &primes)
-{
-    std::vector<int> is_prime(limit, true);
-    for (int n = 2; n < limit; n++)
-    {
-        if (is_prime[n])
-        {
-            primes.push_back(n);
-        }
-        for (int i = n * n; i < limit; i += n)
-        {
-            is_prime[i] = false;
-        }
-    }
-}
-
-class PrimeWorker : public Nan::AsyncWorker
-{
-
-  public:
-    PrimeWorker(Callback *callback, int limit) : Nan::AsyncWorker(callback), limit(limit) {}
-
-    //Executes in worker thread
-    void Execute()
-    {
-        find_primes(limit, primes);
-    }
-
-    // Executes in event loop
-    void HandleOKCallback()
-    {
-        v8::Local<v8::Array> results = New<v8::Array>(primes.size());
-        for (unsigned int i = 0; i < primes.size(); i++)
-        {
-            Nan::Set(results, i, New<v8::Number>(primes[i]));
-        }
-        v8::Local<v8::Value> argv[] = {results};
-        callback->Call(1, argv);
-    }
-
-  private:
-    int limit;
-    vector<int> primes;
-};
-
-class PrimeProgressWorker : public AsyncProgressWorker
-{
-  public:
-    PrimeProgressWorker(Callback *callback, Callback *progress, int limit) : AsyncProgressWorker(callback), progress(progress), limit(limit)
-    {
-    }
-
-    void Execute(const AsyncBareProgressWorker::ExecutionProgress &progress)
-    {
-        std::vector<int> is_prime(limit, true);
-        for (int n = 2; n < limit; n++)
-        {
-            double p = (100.0 * n) / limit;
-            progress.Send(reinterpret_cast<const char *>(&p),
-                          sizeof(double));
-            if (is_prime[n])
-                primes.push_back(n);
-            for (int i = n * n; i < limit; i += n)
-            {
-                is_prime[i] = false;
-            }
-            std::this_thread::sleep_for(
-                chrono::milliseconds(100));
-        }
-    }
-
-    void HandleOKCallback()
-    {
-        v8::Local<v8::Array> results = New<v8::Array>(primes.size());
-        for (unsigned int i = 0; i < primes.size(); i++)
-        {
-            Nan::Set(results, i, New<v8::Number>(primes[i]));
-        }
-        v8::Local<v8::Value> argv[] = {results};
-        callback->Call(1, argv);
-    }
-
-    void HandleProgressCallback(const char *data, size_t size)
-    {
-        // Required, this is not created automatically
-        Nan::HandleScope scope;
-        v8::Local<v8::Value> argv[] = {
-            New<v8::Number>(*reinterpret_cast<double *>(
-                const_cast<char *>(data)))};
-        progress->Call(1, argv);
-    }
-
-  private:
-    Callback *progress;
-    int limit;
-    vector<int> primes;
-};
-
-NAN_METHOD(Primes)
-{
-    int limit = To<int>(info[0]).FromJust();
-    Callback *callback = new Callback(info[1].As<v8::Function>());
-    AsyncQueueWorker(new PrimeWorker(callback, limit));
-}
-
-NAN_METHOD(PrimesProgress)
-{
-    int limit = To<int>(info[0]).FromJust();
-    Callback *callback = new Callback(info[1].As<v8::Function>());
-    Callback *progress = new Callback(info[2].As<v8::Function>());
-    AsyncQueueWorker(new PrimeProgressWorker(callback, progress, limit));
-}
-
-NAN_METHOD(Factor)
-{
-    Callback *progress = new Callback(info[1].As<v8::Function>());
-    Callback *callback = new Callback(info[2].As<v8::Function>());
-    AsyncQueueWorker(new Factorizer(progress, callback, To<uint32_t>(info[0]).FromJust()));
-}
-
 // NOTE(liam): target is defined by the NAN_MODULE_INIT macro
 NAN_MODULE_INIT(Init)
 {
@@ -271,17 +188,6 @@ NAN_MODULE_INIT(Init)
         target,
         New<v8::String>("deviceProbe").ToLocalChecked(),
         GetFunction(New<v8::FunctionTemplate>(Probe)).ToLocalChecked());
-
-    Nan::Set(
-        target,
-        New<v8::String>("primes").ToLocalChecked(),
-        GetFunction(New<v8::FunctionTemplate>(Primes)).ToLocalChecked());
-
-    Nan::Set(
-        target,
-        New<v8::String>("primes_progress").ToLocalChecked(),
-        GetFunction(New<v8::FunctionTemplate>(PrimesProgress)).ToLocalChecked());
-    Set(target, New<v8::String>("factorize").ToLocalChecked(), New<v8::FunctionTemplate>(Factor)->GetFunction());
 
     RtStreamParams::Init(target);
 }
