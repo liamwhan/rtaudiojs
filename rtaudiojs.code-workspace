@@ -37,7 +37,8 @@
 			"map": "cpp",
 			"unordered_map": "cpp",
 			"mutex": "cpp",
-			"functional": "cpp"
+			"functional": "cpp",
+			"ostream": "cpp"
 		},
 		"python.pythonPath": "C:\\Python27\\python.exe",
 	}

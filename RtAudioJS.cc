@@ -261,7 +261,9 @@ NAN_METHOD(Factor)
 {
     Callback *progress = new Callback(info[1].As<v8::Function>());
     Callback *callback = new Callback(info[2].As<v8::Function>());
-    AsyncQueueWorker(new Factorizer(progress, callback, To<uint32_t>(info[0]).FromJust()));
+    Callback *error_callback = new Callback(info[3].As<v8::Function>());
+    AsyncQueueWorker(new Factorizer(progress, callback, error_callback, To<uint32_t>(info[0]).FromJust()));
+    
 }
 
 // NOTE(liam): target is defined by the NAN_MODULE_INIT macro
